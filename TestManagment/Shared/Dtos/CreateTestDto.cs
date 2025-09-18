@@ -2,7 +2,7 @@
 {
     public class CreateTestDto
     {
-        public string TestTitle;
-        public List<int> questionsIds;
+        public string TestTitle { get; set; }
+        public List<int> questionsIds {  get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using TestManagment.Domain.Entities;
 using TestManagment.Infrastructure;
 using TestManagment.Infrastructure.RabbitMQ;
@@ -23,10 +24,11 @@ namespace TestManagment.Services.CreateTest
         {
             Test test = new Test()
             {
-                Title=createTestDto.TestTitle
+                Title = createTestDto.TestTitle,
+                TestQuestions = new()
             };
 
-            foreach(var id in createTestDto.questionsIds)//not implemented
+            foreach(var id in createTestDto.questionsIds)
             {
                 test.TestQuestions.Add(new TestsQuestions { TestId = test.Id, QuestionId =id});
             }

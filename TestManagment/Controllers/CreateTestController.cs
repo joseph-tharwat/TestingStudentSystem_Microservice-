@@ -17,6 +17,13 @@ namespace TestManagment.Controllers
             CreateTestService = createTestService;
         }
 
+        [HttpPost("MakeTest")]
+        public async Task<IActionResult> MakeTest(CreateTestDto createTestDto)
+        {
+            await CreateTestService.MakeTest(createTestDto);
+            return Created();
+        }
+
         [HttpPost("CreateQuestion")]
         public async Task<IActionResult> CreateQuestion(QuestionDto question)
         {
