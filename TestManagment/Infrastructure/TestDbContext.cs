@@ -45,6 +45,8 @@ namespace TestManagment.Infrastructure
                 .WithOne(s => s.test)
                 .HasForeignKey(s => s.TestId);
 
+            modelBuilder.UseHiLo();
+
         }
     }
 }

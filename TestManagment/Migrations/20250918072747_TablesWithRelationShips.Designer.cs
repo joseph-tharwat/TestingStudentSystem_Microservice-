@@ -12,7 +12,7 @@ using TestManagment.Infrastructure;
 namespace TestManagment.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20250917111535_TablesWithRelationShips")]
+    [Migration("20250918072747_TablesWithRelationShips")]
     partial class TablesWithRelationShips
     {
         /// <inheritdoc />
@@ -23,7 +23,10 @@ namespace TestManagment.Migrations
                 .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseHiLo(modelBuilder, "EntityFrameworkHiLoSequence");
+
+            modelBuilder.HasSequence("EntityFrameworkHiLoSequence")
+                .IncrementsBy(10);
 
             modelBuilder.Entity("TestManagment.Domain.Entities.Question", b =>
                 {
@@ -31,7 +34,7 @@ namespace TestManagment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
 
                     b.Property<string>("Answer")
                         .IsRequired()
@@ -64,7 +67,7 @@ namespace TestManagment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -81,9 +84,6 @@ namespace TestManagment.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Points")
                         .HasColumnType("int");
 
                     b.HasKey("TestId", "QuestionId");
