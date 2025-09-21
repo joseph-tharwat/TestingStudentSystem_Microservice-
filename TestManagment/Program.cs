@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using TestManagment.Infrastructure;
 using TestManagment.Infrastructure.RabbitMQ;
 using TestManagment.Services.CreateTest;
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<TestDbContext>(ops=> ops.UseSqlServer(builder.Conf
 builder.Services.AddScoped<CreateTestService>();
 builder.Services.AddScoped<RabbitMqService>();
 builder.Services.AddAutoMapper(conf => { }, typeof(Program));
+builder.Services.AddMediatR(cnf=>cnf.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddEndpointsApiExplorer();  
 builder.Services.AddSwaggerUI();

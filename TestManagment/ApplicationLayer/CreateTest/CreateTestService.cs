@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+using MediatR;
 using TestManagment.Domain.Entities;
+using TestManagment.Domain.Events;
 using TestManagment.Infrastructure;
-using TestManagment.Infrastructure.RabbitMQ;
 using TestManagment.Shared.Dtos;
 
 namespace TestManagment.Services.CreateTest
@@ -11,13 +11,13 @@ namespace TestManagment.Services.CreateTest
     {
         private TestDbContext dbContext { get; }
         private readonly IMapper mapper;
-        private readonly RabbitMqService rabbitMq;
+        private readonly IMediator mediator;
 
-        public CreateTestService(TestDbContext _dbContext, IMapper _mapper, RabbitMqService _rabbitMq)
+        public CreateTestService(TestDbContext _dbContext, IMapper _mapper, IMediator mediator)
         {
             dbContext = _dbContext;
             mapper = _mapper;
-            rabbitMq = _rabbitMq;
+            this.mediator = mediator;
         }
 
         public async Task MakeTest(CreateTestDto createTestDto)
@@ -42,8 +42,9 @@ namespace TestManagment.Services.CreateTest
             var question = mapper.Map<Question>(questionDto);
             await dbContext.AddAsync(question);
 
-            var questionInfo = mapper.Map<QuestionInfoDto>(question);
-            await rabbitMq.sendQuestionToAutoGradeServiceAsync<QuestionInfoDto>(questionInfo, "QuestionInformation");
+            var questionInfo = mapper.Map<QuestionCreatedInfo>(question);
+            await mediator.Publish(new QuestionCreatedEvent(questionInfo));
+            
             dbContext.SaveChanges();
         }
 
@@ -52,8 +53,9 @@ namespace TestManagment.Services.CreateTest
             var questions = mapper.Map<List<Question>>(questionDtos);
             await dbContext.AddRangeAsync(questions);
 
-            var questionsInfo = mapper.Map<List<QuestionInfoDto>>(questions);
-            await rabbitMq.sendQuestionToAutoGradeServiceAsync<List<QuestionInfoDto>>(questionsInfo, "QuestionInformation");
+            var questionsInfo = mapper.Map<List<QuestionCreatedInfo>>(questions);
+            await mediator.Publish(new QuestionsCreatedEvent(questionsInfo));
+
             dbContext.SaveChanges();
         }
 

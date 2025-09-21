@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TestManagment.Domain.Entities;
+using TestManagment.Domain.Events;
 
 namespace TestManagment.Shared.Dtos
 {
@@ -8,7 +9,7 @@ namespace TestManagment.Shared.Dtos
         public MappingProfile() 
         {
             CreateMap<QuestionDto, Question>();
-            CreateMap<Question,QuestionInfoDto>();
+            CreateMap<Question,QuestionCreatedInfo>();
         }
     }
 }

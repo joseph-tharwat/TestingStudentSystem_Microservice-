@@ -7,7 +7,7 @@ namespace TestManagment.Infrastructure.RabbitMQ
 {
     public class RabbitMqService
     {
-        public async Task sendQuestionToAutoGradeServiceAsync<T>(T objectToSend, string queueName)
+        public async Task PublishQuestionCreatedAsync<T>(T objectToSend, string queueName)
         {
             var factory = new ConnectionFactory() { Uri = new Uri("amqps://fvthllld:oaAozrlkFX3XlnXZJehtd3UN7oonwZr1@gorilla.lmq.cloudamqp.com/fvthllld") };
             using var connection = await factory.CreateConnectionAsync();
