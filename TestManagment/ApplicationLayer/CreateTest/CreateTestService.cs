@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TestManagment.Domain.Entities;
 using TestManagment.Domain.Events;
 using TestManagment.Infrastructure;
@@ -22,19 +23,31 @@ namespace TestManagment.Services.CreateTest
 
         public async Task MakeTest(CreateTestDto createTestDto)
         {
-            Test test = new Test()
+            if (string.IsNullOrWhiteSpace(createTestDto.TestTitle))
             {
-                Title = createTestDto.TestTitle,
-                TestQuestions = new()
-            };
-
-            foreach(var id in createTestDto.questionsIds)
-            {
-                test.TestQuestions.Add(new TestsQuestions { TestId = test.Id, QuestionId =id});
+                throw new ArgumentException("Test title can not be empty");
             }
 
+            if (createTestDto.questionsIds==null  || createTestDto.questionsIds.Count==0)
+            {
+                throw new ArgumentException("At least one question id should be provided");
+            }
+
+            var validQuestionIds = await dbContext.Questions
+                .Where(q => createTestDto.questionsIds.Contains(q.Id))
+                .Select(q => q.Id)
+                .ToListAsync();
+
+            var invalidIds = createTestDto.questionsIds.Except(validQuestionIds).ToList();
+            if(invalidIds.Count!=0)
+            {
+                throw new ArgumentException($"Invalid question ids {string.Join(",",invalidIds)}");
+            }
+
+            var test = mapper.Map<Test>(createTestDto);
+
             await dbContext.AddAsync(test);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task CreateQuestion(QuestionDto questionDto)
@@ -45,7 +58,7 @@ namespace TestManagment.Services.CreateTest
             var questionInfo = mapper.Map<QuestionCreatedInfo>(question);
             await mediator.Publish(new QuestionCreatedEvent(questionInfo));
             
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task CreateQuestions(List<QuestionDto> questionDtos)
@@ -56,7 +69,7 @@ namespace TestManagment.Services.CreateTest
             var questionsInfo = mapper.Map<List<QuestionCreatedInfo>>(questions);
             await mediator.Publish(new QuestionsCreatedEvent(questionsInfo));
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
 
 

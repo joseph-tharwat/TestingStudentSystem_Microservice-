@@ -10,7 +10,7 @@ namespace TestManagment.Domain.Entities
         public string Choise2 { get; set; }
         public string Choise3 { get; set; }
         public string Answer {  get; set; }
-        public Collection<TestsQuestions> TestQuestions { get; set; }
+        public Collection<TestQuestion> TestQuestions { get; set; }
 
     }
 }

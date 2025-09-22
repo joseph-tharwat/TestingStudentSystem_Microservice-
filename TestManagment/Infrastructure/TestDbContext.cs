@@ -5,10 +5,10 @@ namespace TestManagment.Infrastructure
 {
     public class TestDbContext: DbContext
     {
-        public DbSet<Question> questions;
-        public DbSet<Test> tests;
-        public DbSet<TestsScheduling> testsScheduling;
-        public DbSet<TestsQuestions> testsQuestions;
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<TestsScheduling> TestsScheduling { get; set; }
+        public DbSet<TestQuestion> TestsQuestions { get; set; }
 
         public TestDbContext(DbContextOptions options) : base(options)
         {
@@ -27,7 +27,7 @@ namespace TestManagment.Infrastructure
             modelBuilder.Entity<TestsScheduling>()
                 .HasKey(t => new {t.TestId, t.DateTime});
 
-            modelBuilder.Entity<TestsQuestions>()
+            modelBuilder.Entity<TestQuestion>()
                 .HasKey(t => new { t.TestId, t.QuestionId });
 
             modelBuilder.Entity<Test>()

@@ -1,6 +1,6 @@
 ﻿namespace TestManagment.Domain.Entities
 {
-    public class TestsQuestions
+    public class TestQuestion
     {
         public int TestId { get; set; }
         public int QuestionId { get; set; }
