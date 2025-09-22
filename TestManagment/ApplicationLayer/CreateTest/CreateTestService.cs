@@ -23,16 +23,6 @@ namespace TestManagment.Services.CreateTest
 
         public async Task MakeTest(CreateTestDto createTestDto)
         {
-            if (string.IsNullOrWhiteSpace(createTestDto.TestTitle))
-            {
-                throw new ArgumentException("Test title can not be empty");
-            }
-
-            if (createTestDto.questionsIds==null  || createTestDto.questionsIds.Count==0)
-            {
-                throw new ArgumentException("At least one question id should be provided");
-            }
-
             var validQuestionIds = await dbContext.Questions
                 .Where(q => createTestDto.questionsIds.Contains(q.Id))
                 .Select(q => q.Id)

@@ -20,6 +20,16 @@ namespace TestManagment.Controllers
         [HttpPost("MakeTest")]
         public async Task<IActionResult> MakeTest(CreateTestDto createTestDto)
         {
+            if (string.IsNullOrWhiteSpace(createTestDto.TestTitle))
+            {
+                return BadRequest("Test title can not be empty");
+            }
+
+            if (createTestDto.questionsIds == null || createTestDto.questionsIds.Count == 0)
+            {
+                return BadRequest("At least one question id should be provided");
+            }
+
             await CreateTestService.MakeTest(createTestDto);
             return Created();
         }
