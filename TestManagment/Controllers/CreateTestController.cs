@@ -20,14 +20,13 @@ namespace TestManagment.Controllers
         [HttpPost("MakeTest")]
         public async Task<IActionResult> MakeTest(CreateTestDto createTestDto)
         {
-            if (string.IsNullOrWhiteSpace(createTestDto.TestTitle))
+            if (createTestDto == null)
             {
-                return BadRequest("Test title can not be empty");
+                return BadRequest("Test object must be not null");
             }
-
-            if (createTestDto.questionsIds == null || createTestDto.questionsIds.Count == 0)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("At least one question id should be provided");
+                return BadRequest(ModelState);
             }
 
             await CreateTestService.MakeTest(createTestDto);
@@ -37,6 +36,15 @@ namespace TestManagment.Controllers
         [HttpPost("CreateQuestion")]
         public async Task<IActionResult> CreateQuestion(QuestionDto question)
         {
+            if(question == null)
+            {
+                return BadRequest("question must be not null");
+            }
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             await CreateTestService.CreateQuestion(question);
             return Created();
         }
@@ -44,6 +52,19 @@ namespace TestManagment.Controllers
         [HttpPost("CreateQuestions")]
         public async Task<IActionResult> CreateQuestions(List<QuestionDto>  questions)
         {
+            if (questions == null)
+            {
+                return BadRequest("question must be not null");
+            }
+            if (questions.Count == 0)
+            {
+                return BadRequest("At least send one question.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             await CreateTestService.CreateQuestions(questions);
             return Created();
         }
