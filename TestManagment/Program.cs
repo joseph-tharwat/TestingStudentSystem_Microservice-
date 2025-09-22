@@ -20,7 +20,8 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<TestDbContext>(ops=> ops.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 builder.Services.AddScoped<CreateTestService>();
-builder.Services.AddScoped<RabbitMqService>();
+builder.Services.AddSingleton<RabbitMqService>();
+builder.Services.Configure<RabbitMqSetings>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.AddAutoMapper(conf => { }, typeof(Program));
 builder.Services.AddMediatR(cnf=>cnf.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 

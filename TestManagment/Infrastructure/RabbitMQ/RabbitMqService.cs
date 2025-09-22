@@ -2,20 +2,63 @@
 using System.Text.Json;
 using System.Text;
 using TestManagment.Shared.Dtos;
+using Microsoft.AspNetCore.Connections;
+using TestManagment.Domain.Events;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace TestManagment.Infrastructure.RabbitMQ
 {
-    public class RabbitMqService
+    public class RabbitMqService:IDisposable
     {
-        public async Task PublishQuestionCreatedAsync<T>(T objectToSend, string queueName)
+        private IConnection connection { get; set; }
+        private readonly IConfiguration Configuration;
+        private readonly IOptions<RabbitMqSetings> config;
+
+        public RabbitMqService(IConfiguration configuration, IOptions<RabbitMqSetings> config) 
         {
-            var factory = new ConnectionFactory() { Uri = new Uri("amqps://fvthllld:oaAozrlkFX3XlnXZJehtd3UN7oonwZr1@gorilla.lmq.cloudamqp.com/fvthllld") };
-            using var connection = await factory.CreateConnectionAsync();
-            using var channel = await connection.CreateChannelAsync();
-            await channel.QueueDeclareAsync(queue: queueName, exclusive: false);
+            Configuration = configuration;
+            this.config = config;
+
+            var factory = new ConnectionFactory() { Uri = new Uri(config.Value.Uri) };
+            connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
+        }
+
+        public async Task PublishQuestionCreatedAsync<T>(T objectToSend, string oneOrManyHeaderValue)
+        {
+            await using var channel = await connection.CreateChannelAsync();
+            await channel.QueueDeclareAsync(queue: config.Value.QueueName, exclusive: false);
 
             var msgBody = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(objectToSend));
-            await channel.BasicPublishAsync(exchange: "", routingKey: queueName, msgBody);
+
+            var props = new BasicProperties()
+            {
+                Headers = new Dictionary<string, object?>
+                {
+                    { config.Value.HeaderKey, oneOrManyHeaderValue }
+                }
+            };
+
+            await channel.BasicPublishAsync(
+                exchange: config.Value.ExchangeName,
+                routingKey: config.Value.QueueName,
+                true,
+                basicProperties: props,
+                body: msgBody);
+        }
+
+        public async Task PublishOneQuestionCreatedAsync(OneQuestionCreatedEvent question)
+        {
+            await PublishQuestionCreatedAsync(question, config.Value.HeaderValueOne);
+        }
+        public async Task PublishManyQuestionsCreatedAsync(ManyQuestionsCreatedEvent questions)
+        {
+            await PublishQuestionCreatedAsync(questions, config.Value.HeaderValueMany);
+        }
+
+        public void Dispose()
+        {
+            connection?.Dispose();
         }
     }
 }

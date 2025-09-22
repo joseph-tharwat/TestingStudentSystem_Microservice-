@@ -46,7 +46,7 @@ namespace TestManagment.Services.CreateTest
             await dbContext.AddAsync(question);
 
             var questionInfo = mapper.Map<QuestionCreatedInfo>(question);
-            await mediator.Publish(new QuestionCreatedEvent(questionInfo));
+            await mediator.Publish(new OneQuestionCreatedEvent(questionInfo));
             
             await dbContext.SaveChangesAsync();
         }
@@ -57,7 +57,7 @@ namespace TestManagment.Services.CreateTest
             await dbContext.AddRangeAsync(questions);
 
             var questionsInfo = mapper.Map<List<QuestionCreatedInfo>>(questions);
-            await mediator.Publish(new QuestionsCreatedEvent(questionsInfo));
+            await mediator.Publish(new ManyQuestionsCreatedEvent(questionsInfo));
 
             await dbContext.SaveChangesAsync();
         }

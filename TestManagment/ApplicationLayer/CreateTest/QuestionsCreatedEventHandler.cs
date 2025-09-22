@@ -4,7 +4,7 @@ using TestManagment.Infrastructure.RabbitMQ;
 
 namespace TestManagment.Services.CreateTest
 {
-    public class QuestionsCreatedEventHandler : INotificationHandler<QuestionsCreatedEvent>
+    public class QuestionsCreatedEventHandler : INotificationHandler<ManyQuestionsCreatedEvent>
     {
         private readonly RabbitMqService rabbitMqService;
 
@@ -14,9 +14,9 @@ namespace TestManagment.Services.CreateTest
         }
 
 
-        public async Task Handle(QuestionsCreatedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(ManyQuestionsCreatedEvent notification, CancellationToken cancellationToken)
         {
-            await rabbitMqService.PublishQuestionCreatedAsync(notification, "QuestionsInformation");
+            await rabbitMqService.PublishManyQuestionsCreatedAsync(notification);
         }
     }
 }
