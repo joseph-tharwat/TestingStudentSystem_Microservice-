@@ -29,8 +29,15 @@ namespace TestManagment.Controllers
                 return BadRequest(ModelState);
             }
 
-            await CreateTestService.MakeTest(createTestDto);
-            return Created();
+            try
+            {
+                await CreateTestService.MakeTest(createTestDto);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("CreateQuestion")]
@@ -45,8 +52,16 @@ namespace TestManagment.Controllers
                 return BadRequest(ModelState);
             }
 
-            await CreateTestService.CreateQuestion(question);
-            return Created();
+            try
+            {
+                await CreateTestService.CreateQuestion(question);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         [HttpPost("CreateQuestions")]
@@ -64,9 +79,16 @@ namespace TestManagment.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            await CreateTestService.CreateQuestions(questions);
-            return Created();
+            try
+            {
+                await CreateTestService.CreateQuestions(questions);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
     }
