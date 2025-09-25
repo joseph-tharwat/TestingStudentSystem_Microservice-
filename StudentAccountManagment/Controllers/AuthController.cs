@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using StudentAccountManagment.ApplicationLayer;
 using StudentAccountManagment.Shared;
@@ -30,8 +31,8 @@ namespace StudentAccountManagment.Controllers
 
             try
             {
-                await authService.Login(loginUser);
-                return Ok();
+                var token = await authService.Login(loginUser);
+                return Ok(token);
             }
             catch(Exception e)
             {
@@ -68,8 +69,8 @@ namespace StudentAccountManagment.Controllers
 
             try
             {
-                await authService.Register(registerUser);
-                return Created();
+                var token = await authService.Register(registerUser);
+                return Ok(token);
             }
             catch(Exception e)
             {

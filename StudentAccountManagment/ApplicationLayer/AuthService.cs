@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using StudentAccountManagment.Infrastructure;
+using StudentAccountManagment.Infrastructure.Jwt;
 using StudentAccountManagment.Shared;
 
 namespace StudentAccountManagment.ApplicationLayer
@@ -8,13 +9,16 @@ namespace StudentAccountManagment.ApplicationLayer
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
-        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) 
+        private readonly JwtService jwtService;
+
+        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, JwtService jwtService) 
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.jwtService = jwtService;
         }
 
-        public async Task Login(LoginUser loginUser)
+        public async Task<string> Login(LoginUser loginUser)
         {
             var user = await userManager.FindByEmailAsync(loginUser.Email);
             if (user == null)
@@ -22,19 +26,22 @@ namespace StudentAccountManagment.ApplicationLayer
                 throw new Exception("Invalid credentials");
             }
 
-            var result = await signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
+            //var result = await signInManager.PasswordSignInAsync(user, loginUser.Password, false, false);
+            var result = await signInManager.CheckPasswordSignInAsync(user, loginUser.Password, false);
             if (!result.Succeeded)
             {
                 throw new Exception("Invalid credentials");
             }
+            return jwtService.GenerateToken(user);
         }
 
         public async Task LogOut()
         {
-            await signInManager.SignOutAsync();
+            //await signInManager.SignOutAsync();
+            //need to put in blacklist 
         }
 
-        public async Task Register(RegisterUser registerUser)
+        public async Task<string> Register(RegisterUser registerUser)
         {
             var existedUser = await userManager.FindByEmailAsync(registerUser.Email);
             if (existedUser != null)
@@ -54,7 +61,8 @@ namespace StudentAccountManagment.ApplicationLayer
                 throw new Exception(string.Join(",",result.Errors.Select(e=>e.Description)));
             }
 
-            await signInManager.SignInAsync(user, false);
+            //await signInManager.SignInAsync(user, false);
+            return jwtService.GenerateToken(user);
         }
     }
 }
