@@ -1,4 +1,6 @@
+using GradingManagment.Infrastructure.Database;
 using GradingManagment.Infrastructure.RabbitMQ;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,13 +9,21 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddDbContext<GradingDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("local")));
+builder.Services.Configure<RabbitMqSetings>(builder.Configuration.GetSection("RabbitMq"));
+builder.Services.AddAutoMapper(conf => { }, typeof(Program));
 builder.Services.AddHostedService<GetTestInfoWorker>();
-
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<GradingDbContext>();
+    dbContext.Database.Migrate();
+}
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
