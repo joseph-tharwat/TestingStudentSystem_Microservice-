@@ -1,3 +1,4 @@
+using GradingManagment.ApplicationLayer;
 using GradingManagment.Infrastructure.Database;
 using GradingManagment.Infrastructure.RabbitMQ;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddSwaggerUI();
 
 builder.Services.AddDbContext<GradingDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 builder.Services.Configure<RabbitMqSetings>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.AddAutoMapper(conf => { }, typeof(Program));
 builder.Services.AddHostedService<GetTestInfoWorker>();
+builder.Services.AddScoped<GradeQuestionService>();
 
 var app = builder.Build();
 
@@ -26,6 +29,7 @@ using (var scope = app.Services.CreateScope())
     if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapSwaggerUI();
 }
 
 app.UseHttpsRedirection();

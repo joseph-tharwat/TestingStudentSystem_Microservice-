@@ -9,8 +9,8 @@ namespace GradingManagment.Infrastructure.Database
         {
         }
 
-        DbSet<QuestionInformation> QuestionInformations {  get; set; }
-        DbSet<StudentGrade> StudentGrades { get; set; }
+        public DbSet<QuestionInformation> QuestionInformations {  get; set; }
+        public DbSet<StudentGrade> StudentGrades { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,7 +20,7 @@ namespace GradingManagment.Infrastructure.Database
                 .HasKey(x => x.QuestionId);
 
             modelBuilder.Entity<StudentGrade>()
-                .HasKey(q => new {  q.QuestionId , q.TestId});
+                .HasKey(q => new {  q.QuestionId , q.TestId, q.StudentId});
 
             modelBuilder.UseHiLo();
         }
