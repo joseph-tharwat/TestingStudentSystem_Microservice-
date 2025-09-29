@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestManagment.Domain.Entities;
+using TestManagment.Domain.ValueObjects;
 
 namespace TestManagment.Infrastructure
 {
@@ -20,6 +21,26 @@ namespace TestManagment.Infrastructure
 
             modelBuilder.Entity<Question>()
                 .HasKey(q => q.Id);
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.QuestionText)
+                .HasConversion(v => v.Text, v => new QuestionTxt(v))
+                .HasColumnName("QuestionText");
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.Choise1)
+                .HasConversion(v => v.Choise, v => new QuestionChoise(v))
+                .HasColumnName("Choise1");
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.Choise2)
+                .HasConversion(v => v.Choise, v => new QuestionChoise(v))
+                .HasColumnName("Choise2");
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.Choise3)
+                .HasConversion(v => v.Choise, v => new QuestionChoise(v))
+                .HasColumnName("Choise3");
 
             modelBuilder.Entity<Test>()
                 .HasKey(t => t.Id);
