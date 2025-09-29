@@ -23,6 +23,9 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddJwt();
 
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,6 +44,8 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapReverseProxy();
 
 app.MapControllers();
 
