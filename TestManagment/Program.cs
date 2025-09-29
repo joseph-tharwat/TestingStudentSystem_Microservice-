@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using TestManagment.ApplicationLayer.GetQuestion;
 using TestManagment.Infrastructure;
 using TestManagment.Infrastructure.RabbitMQ;
 using TestManagment.Services.CreateTest;
@@ -24,6 +25,7 @@ builder.Services.AddSingleton<RabbitMqService>();
 builder.Services.Configure<RabbitMqSetings>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.AddAutoMapper(conf => { }, typeof(Program));
 builder.Services.AddMediatR(cnf=>cnf.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+builder.Services.AddScoped<GetQuestionService>();
 
 builder.Services.AddEndpointsApiExplorer();  
 builder.Services.AddSwaggerUI();
