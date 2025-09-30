@@ -40,8 +40,8 @@ services:
     environment:
       - ConnectionStrings__local=Server=db;Database=AuthTestingSystem;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5169
-    # ports:
-    #   - "5169:5169"
+    ports:
+      - "5169:5169"
     depends_on:
       - db
     networks:
@@ -62,5 +62,5 @@ services:
 networks:
   internal:
     driver: bridge
-  exterbal:
-    driver: host
+  external:
+    driver: bridge

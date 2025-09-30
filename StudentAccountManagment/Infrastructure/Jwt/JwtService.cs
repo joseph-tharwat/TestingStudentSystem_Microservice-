@@ -31,7 +31,7 @@ namespace StudentAccountManagment.Infrastructure.Jwt
                 audience: jwtOptions.Value.Audiance,
                 claims: claims,
                 signingCredentials: cred,
-                expires: DateTime.Now.AddHours(1));
+                expires: DateTime.Now.AddHours(100));
 
             var jwtToken = (new JwtSecurityTokenHandler()).WriteToken(token);
             return jwtToken;
