@@ -30,7 +30,7 @@ services:
 
 
   studentaccountmanagment:
-    image: ${DOCKER_REGISTRY-}studentaccountmanagment
+    image: ${DOCKER_REGISTRY-}StudentAccountManagment
     build:
       context: ./studentaccountmanagment
       dockerfile: Dockerfile
