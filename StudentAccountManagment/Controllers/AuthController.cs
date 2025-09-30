@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using StudentAccountManagment.ApplicationLayer;
@@ -76,6 +77,13 @@ namespace StudentAccountManagment.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [Authorize]
+        [HttpPost("testJwt")]
+        public IActionResult testJwt()
+        {
+            return Ok("nice");
         }
 
     }
