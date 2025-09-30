@@ -1,0 +1,22 @@
+services:
+  testmanagment:
+    image: ${DOCKER_REGISTRY-}testmanagment
+    build:
+      context: .
+      dockerfile: TestManagment/Dockerfile
+    environment:
+      - ConnectionStrings__local=Server=db;Database=TestingStudents;User Id=sa;Password=Your_strong_password123;
+    depends_on: 
+      - db
+    ports:
+      - "5139:5139"
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+       SA_PASSWORD: "Your_strong_password123"
+       ACCEPT_EULA: "Y"
+    ports:
+       - "1433:1433"
+
