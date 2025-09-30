@@ -6,10 +6,12 @@ services:
       dockerfile: TestManagment/Dockerfile
     environment:
       - ConnectionStrings__local=Server=db;Database=TestingStudents;User Id=sa;Password=Your_strong_password123;
+      - ASPNETCORE_URLS=http://+:5139 
     depends_on: 
       - db
     ports:
       - "5139:5139"
+      # - "8081:8081"
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -19,4 +21,3 @@ services:
        ACCEPT_EULA: "Y"
     ports:
        - "1433:1433"
-
