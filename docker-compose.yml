@@ -10,9 +10,10 @@ services:
       - ASPNETCORE_URLS=http://+:5139 
     depends_on: 
       - db
-    ports:
-      - "5139:5139"
-      # - "8081:8081"
+    # ports:
+    #   - "5139:5139"
+    networks:
+      - internal
 
   gradingmanagment:
     image: ${DOCKER_REGISTRY-}gradingmanagment
@@ -22,12 +23,13 @@ services:
       dockerfile: Dockerfile
     environment:
       - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
-      - ASPNETCORE_URLS=http://+5066
-    ports:
-      - "5066:5066"
+      - ASPNETCORE_URLS=http://+:5066
+    # ports:
+    #   - "5066:5066"
     depends_on:
       - db
-
+    networks:
+      - internal
 
   studentaccountmanagment:
     image: ${DOCKER_REGISTRY-}studentaccountmanagment
@@ -37,11 +39,14 @@ services:
       dockerfile: Dockerfile
     environment:
       - ConnectionStrings__local=Server=db;Database=AuthTestingSystem;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
-      - ASPNETCORE_URLS=http://+5169
-    ports:
-      - "5169:5169"
+      - ASPNETCORE_URLS=http://+:5169
+    # ports:
+    #   - "5169:5169"
     depends_on:
       - db
+    networks:
+      - internal
+      - external
       
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -49,5 +54,13 @@ services:
     environment:
        SA_PASSWORD: "Your_strong_password123"
        ACCEPT_EULA: "Y"
-    ports:
-       - "1433:1433"
+    # ports:
+       # - "1433:1433"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+  exterbal:
+    driver: host

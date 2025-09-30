@@ -1,0 +1,12 @@
+test each container:
+
+curl -w "%{http_code}\n" -X POST http://localhost:5139/api/CreateTest/CreateQuestion -H "Content-Type: application/json" -d '{"questionText":"What is 2+2?", "choise1":"3", "choise2":"4", "choise3":"5", "answer":"2"}'
+
+
+curl -w "%{http_code}\n" -X POST http://localhost:5169/api/Auth/Register -H "Content-Type: application/json" -d '{ "name": "s1","email": "s1@s.com","password": "Abc.123"}'
+
+
+curl -w "%{http_code}\n" -X POST http://localhost:5169/api/Auth/Login    -H 'Content-Type: application/json' -d '{ "email": "s1@s.com", "password": "Abc.123" }'
+
+
+curl -w "%{http_code}\n" -X POST http://localhost:5066/api/GradeStudents/GradeQuestion -H 'Content-Type: application/json' -d '{ "studentId": 1, "testId": 1, "questionId": 1, "answer": "5" }'
