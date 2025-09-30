@@ -1,11 +1,12 @@
 services:
   testmanagment:
     image: ${DOCKER_REGISTRY-}testmanagment
+    container_name: testmanagment
     build:
       context: ./TestManagment
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__local=Server=db;Database=TestingStudents;User Id=sa;Password=Your_strong_password123;
+      - ConnectionStrings__local=Server=db;Database=TestingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5139 
     depends_on: 
       - db
@@ -13,6 +14,34 @@ services:
       - "5139:5139"
       # - "8081:8081"
 
+  gradingmanagment:
+    image: ${DOCKER_REGISTRY-}gradingmanagment
+    container_name: gradingmanagment
+    build:
+      context: ./GradingManagment
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+5066
+    ports:
+      - "5066:5066"
+    depends_on:
+      - db
+
+
+  studentaccountmanagment:
+    image: ${DOCKER_REGISTRY-}studentaccountmanagment
+    build:
+      context: ./studentaccountmanagment
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__local=Server=db;Database=AuthTestingSystem;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+5169
+    ports:
+      - "5169:5169"
+    depends_on:
+      - db
+      
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
