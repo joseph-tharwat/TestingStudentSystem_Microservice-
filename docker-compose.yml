@@ -2,8 +2,8 @@ services:
   testmanagment:
     image: ${DOCKER_REGISTRY-}testmanagment
     build:
-      context: .
-      dockerfile: TestManagment/Dockerfile
+      context: ./TestManagment
+      dockerfile: Dockerfile
     environment:
       - ConnectionStrings__local=Server=db;Database=TestingStudents;User Id=sa;Password=Your_strong_password123;
       - ASPNETCORE_URLS=http://+:5139 
