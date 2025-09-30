@@ -10,12 +10,10 @@ services:
       - ASPNETCORE_URLS=http://+:5139 
     depends_on: 
       - db
-    # ports:
-    #   - "5139:5139"
     networks:
       - internal
 
-  gradingmanagment:
+  gradingmanagment1:
     image: ${DOCKER_REGISTRY-}gradingmanagment
     container_name: gradingmanagment
     build:
@@ -24,8 +22,21 @@ services:
     environment:
       - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
-    # ports:
-    #   - "5066:5066"
+    depends_on:
+      - db
+    networks:
+      - internal
+
+
+  gradingmanagment2:
+    image: ${DOCKER_REGISTRY-}gradingmanagment
+    container_name: gradingmanagment
+    build:
+      context: ./GradingManagment
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:5067
     depends_on:
       - db
     networks:
@@ -54,8 +65,6 @@ services:
     environment:
        SA_PASSWORD: "Your_strong_password123"
        ACCEPT_EULA: "Y"
-    # ports:
-       # - "1433:1433"
     networks:
       - internal
 
