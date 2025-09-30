@@ -30,9 +30,10 @@ services:
 
 
   studentaccountmanagment:
-    image: ${DOCKER_REGISTRY-}StudentAccountManagment
+    image: ${DOCKER_REGISTRY-}studentaccountmanagment
+    container_name: studentaccountmanagment
     build:
-      context: ./studentaccountmanagment
+      context: ./StudentAccountManagment
       dockerfile: Dockerfile
     environment:
       - ConnectionStrings__local=Server=db;Database=AuthTestingSystem;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
