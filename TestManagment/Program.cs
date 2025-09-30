@@ -32,12 +32,18 @@ builder.Services.AddSwaggerUI();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
-    app.MapSwaggerUI();
+    var dbcontext = scope.ServiceProvider.GetRequiredService<TestDbContext>();
+    dbcontext.Database.Migrate();
 }
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapOpenApi();
+        app.MapSwaggerUI();
+    }
 
 app.UseHttpsRedirection();
 
