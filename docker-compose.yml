@@ -1,4 +1,5 @@
 services:
+  #TestManagment service
   testmanagment:
     image: ${DOCKER_REGISTRY-}testmanagment
     container_name: testmanagment
@@ -6,7 +7,7 @@ services:
       context: ./TestManagment
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__local=Server=db;Database=TestingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=sqlserve-exam;Database=TestingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5139 
     depends_on: 
       db:
@@ -14,6 +15,7 @@ services:
     networks:
       - internal
 
+ #GradingManagment service
   gradingmanagment1:
     image: ${DOCKER_REGISTRY-}gradingmanagment
     container_name: gradingmanagment1
@@ -22,7 +24,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUN_MIGRATION=true
-      - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=sqlserver-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
     depends_on:
       db:
@@ -39,7 +41,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUN_MIGRATION=false
-      - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=sqlserver-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5067
     depends_on:
       db:
@@ -47,7 +49,8 @@ services:
       
     networks:
       - internal
-
+  
+  #Api Getway and Auth service
   studentaccountmanagment:
     image: ${DOCKER_REGISTRY-}studentaccountmanagment
     container_name: studentaccountmanagment
@@ -55,23 +58,22 @@ services:
       context: ./StudentAccountManagment
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__local=Server=db;Database=AuthTestingSystem;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=sqlserve-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5169
     ports:
       - "5169:5169"
     depends_on:
       db: 
-        condition: service_healthy
-        
+        condition: service_healthy  
     networks:
       - internal
-      - external
-      
-  db:
+
+  #Database servers
+  db-grade:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
+    container_name: sqlserver-grade
     environment:
-       SA_PASSWORD: "Your_strong_password123"
+       SA_PASSWORD: "Abc.123"
        ACCEPT_EULA: "Y"
     networks:
       - internal
@@ -81,9 +83,22 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+  
+  db-exam:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserve-exam
+    environment:
+      SA_PASSWORD: "Abc.123"
+      ACCEPT_EULA: "Y"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/1433' || exit 1"]
+      retries: 5
+      interval: 2s
+      timeout: 5s
+      start_period: 10s
+    networks:
+      - internal
 
 networks:
   internal:
-    driver: bridge
-  external:
     driver: bridge
