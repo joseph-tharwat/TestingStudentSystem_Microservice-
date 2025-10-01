@@ -21,7 +21,7 @@ services:
       context: ./GradingManagment
       dockerfile: Dockerfile
     environment:
-      - RUN_MIGRATION="true"
+      - RUN_MIGRATION=true
       - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
     depends_on:
@@ -38,7 +38,7 @@ services:
       context: ./GradingManagment
       dockerfile: Dockerfile
     environment:
-      - RUN_MIGRATION="false"
+      - RUN_MIGRATION=false
       - ConnectionStrings__local=Server=db;Database=GradingStudents;User Id=sa;Password=Your_strong_password123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5067
     depends_on:
@@ -81,6 +81,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
 networks:
   internal:
     driver: bridge
