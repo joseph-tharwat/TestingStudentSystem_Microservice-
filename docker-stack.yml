@@ -1,0 +1,79 @@
+services:
+  #TestManagment service
+  testmanagment:
+    image: josephtharwat/testmanagment
+    environment:
+      - ConnectionStrings__local=Server=db-exam;Database=TestingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:5139 
+    networks:
+      - internal
+
+ #GradingManagment service
+  gradingmanagment-migrate:
+    image: josephtharwat/gradingmanagment
+    environment:
+      - RUN_MIGRATION=true
+      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:5066
+    networks:
+      - internal
+  
+  gradingmanagment:
+    image: josephtharwat/gradingmanagment
+    environment:
+      - RUN_MIGRATION=false
+      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:5066
+    networks:
+      - internal
+    deploy:
+      replicas: 2
+   
+  #Api Getway and Auth service
+  studentaccountmanagment:
+    image: josephtharwat/studentaccountmanagment
+    build:
+      context: ./StudentAccountManagment
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__local=Server=db-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:5169
+    ports:
+      - "5169:5169"
+    networks:
+      - internal
+
+  #Database servers
+  db-grade:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: db-grade
+    environment:
+       SA_PASSWORD: "Abc_12345"
+       ACCEPT_EULA: "Y"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/1433' || exit 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    
+  db-exam:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: db-exam
+    environment:
+      SA_PASSWORD: "Abc_12345"
+      ACCEPT_EULA: "Y"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/1433' || exit 1"]
+      retries: 5
+      interval: 2s
+      timeout: 5s
+      start_period: 20s
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: overlay
