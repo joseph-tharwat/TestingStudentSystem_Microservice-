@@ -7,7 +7,7 @@ services:
       context: ./TestManagment
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__local=Server=db-exam;Database=TestingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-exam;Database=TestingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5139 
     depends_on: 
       db-exam:
@@ -24,7 +24,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUN_MIGRATION=true
-      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
     depends_on:
       db-grade:
@@ -41,12 +41,11 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUN_MIGRATION=false
-      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5067
     depends_on:
       db-grade:
         condition: service_healthy
-      
     networks:
       - internal
   
@@ -58,7 +57,7 @@ services:
       context: ./StudentAccountManagment
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__local=Server=db-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5169
     ports:
       - "5169:5169"
@@ -73,7 +72,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: db-grade
     environment:
-       SA_PASSWORD: "Abc.123"
+       SA_PASSWORD: "Abc_12345"
        ACCEPT_EULA: "Y"
     networks:
       - internal
@@ -88,7 +87,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: db-exam
     environment:
-      SA_PASSWORD: "Abc.123"
+      SA_PASSWORD: "Abc_12345"
       ACCEPT_EULA: "Y"
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/1433' || exit 1"]
