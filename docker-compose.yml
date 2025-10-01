@@ -16,9 +16,9 @@ services:
       - internal
 
  #GradingManagment service
-  gradingmanagment:
+  gradingmanagment1:
     image: ${DOCKER_REGISTRY-}gradingmanagment
-    container_name: gradingmanagment
+    container_name: gradingmanagment1
     build:
       context: ./GradingManagment
       dockerfile: Dockerfile
@@ -26,6 +26,23 @@ services:
       - RUN_MIGRATION=true
       - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
+    depends_on:
+      db-grade:
+        condition: service_healthy
+    networks:
+      - internal
+
+
+  gradingmanagment2:
+    image: ${DOCKER_REGISTRY-}gradingmanagment
+    container_name: gradingmanagment2
+    build:
+      context: ./GradingManagment
+      dockerfile: Dockerfile
+    environment:
+      - RUN_MIGRATION=false
+      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:5067
     depends_on:
       db-grade:
         condition: service_healthy
@@ -64,8 +81,8 @@ services:
       interval: 2s
       timeout: 5s
       retries: 5
-      start_period: 20s
-    
+      start_period: 10s
+  
   db-exam:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: db-exam
@@ -77,7 +94,7 @@ services:
       retries: 5
       interval: 2s
       timeout: 5s
-      start_period: 20s
+      start_period: 10s
     networks:
       - internal
 
