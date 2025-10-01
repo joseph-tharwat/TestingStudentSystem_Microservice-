@@ -19,11 +19,15 @@ builder.Services.AddScoped<GradeQuestionService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if(Environment.GetEnvironmentVariable("RUN_MIGRATION") == "true")
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<GradingDbContext>();
-    dbContext.Database.Migrate();
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<GradingDbContext>();
+        dbContext.Database.Migrate();
+    }
 }
+
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
