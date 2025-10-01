@@ -7,10 +7,10 @@ services:
       context: ./TestManagment
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__local=Server=sqlserve-exam;Database=TestingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-exam;Database=TestingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5139 
     depends_on: 
-      db:
+      db-exam:
         condition: service_healthy
     networks:
       - internal
@@ -24,10 +24,10 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUN_MIGRATION=true
-      - ConnectionStrings__local=Server=sqlserver-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
     depends_on:
-      db:
+      db-grade:
         condition: service_healthy
     networks:
       - internal
@@ -41,10 +41,10 @@ services:
       dockerfile: Dockerfile
     environment:
       - RUN_MIGRATION=false
-      - ConnectionStrings__local=Server=sqlserver-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5067
     depends_on:
-      db:
+      db-grade:
         condition: service_healthy
       
     networks:
@@ -58,12 +58,12 @@ services:
       context: ./StudentAccountManagment
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__local=Server=sqlserve-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
+      - ConnectionStrings__local=Server=db-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc.123;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5169
     ports:
       - "5169:5169"
     depends_on:
-      db: 
+      db-exam: 
         condition: service_healthy  
     networks:
       - internal
@@ -71,7 +71,7 @@ services:
   #Database servers
   db-grade:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver-grade
+    container_name: db-grade
     environment:
        SA_PASSWORD: "Abc.123"
        ACCEPT_EULA: "Y"
@@ -86,7 +86,7 @@ services:
   
   db-exam:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserve-exam
+    container_name: db-exam
     environment:
       SA_PASSWORD: "Abc.123"
       ACCEPT_EULA: "Y"
