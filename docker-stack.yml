@@ -8,20 +8,10 @@ services:
     networks:
       - internal
 
- #GradingManagment service
-  gradingmanagment-migrate:
-    image: josephtharwat/gradingmanagment
-    environment:
-      - RUN_MIGRATION=true
-      - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
-      - ASPNETCORE_URLS=http://+:5066
-    networks:
-      - internal
-  
+ #GradingManagment service  
   gradingmanagment:
     image: josephtharwat/gradingmanagment
     environment:
-      - RUN_MIGRATION=false
       - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
     networks:
