@@ -1,0 +1,8 @@
+docker build -t josephtharwat/gradingmanagment        ./GradingManagment/
+docker build -t josephtharwat/studentaccountmanagment ./StudentAccountManagment/
+docker build -t josephtharwat/testmanagment           ./TestManagment/
+
+docker push josephtharwat/gradingmanagment
+docker push josephtharwat/studentaccountmanagment
+docker push josephtharwat/testmanagment
+

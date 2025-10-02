@@ -21,14 +21,9 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    try
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<GradingDbContext>();
-        dbContext.Database.Migrate();
-    }
-    catch
-    { 
-    }
+    var dbContext = scope.ServiceProvider.GetRequiredService<GradingDbContext>();
+    dbContext.Database.Migrate();
+    
 }
 
 // Configure the HTTP request pipeline.
