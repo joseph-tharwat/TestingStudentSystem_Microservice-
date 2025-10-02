@@ -26,6 +26,8 @@ services:
       context: ./StudentAccountManagment
       dockerfile: Dockerfile
     environment:
+      - ReverseProxy__Clusters__TestCreationCluster__Destinations__TestCreationService__Address=http://testmanagment:5139
+      - ReverseProxy__Clusters__GradeStudentCluster__Destinations__GradeStudentService__Address=http://gradingmanagment:5066
       - ConnectionStrings__local=Server=db-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5169
     ports:
