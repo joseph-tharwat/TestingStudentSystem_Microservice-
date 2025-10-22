@@ -14,7 +14,8 @@ curl -w "\n%{http_code}\n" -X POST http://localhost:5066/api/GradeStudents/Grade
 
 test after adding the network and api getway:
 
-curl -w "\n%{http_code}\n" -X POST http://localhost:5169/api/Auth/Register -H "Content-Type: application/json" -d '{ "name": "s1","email": "s1@s.com","password": "Abc.123"}'
+curl -w "\n%{http_code}\n" -X POST http://localhost:5169/api/Auth/RegisterStudent -H "Content-Type: application/json" -d '{ "name": "s1","email": "s1@s.com","password": "Abc.123"}'
+curl -w "\n%{http_code}\n" -X POST http://localhost:5169/api/Auth/RegisterTeacher -H "Content-Type: application/json" -d '{ "name": "t1","email": "t1@s.com","password": "Abc.123"}'
 
 curl -w "\n%{http_code}\n" -X POST http://localhost:5169/api/Auth/Login    -H 'Content-Type: application/json' -d '{ "email": "s1@s.com", "password": "Abc.123" }'
 
