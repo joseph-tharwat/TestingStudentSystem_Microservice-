@@ -56,8 +56,8 @@ namespace StudentAccountManagment.Controllers
            
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register(RegisterUser registerUser)
+        [HttpPost("RegisterTeacher")]
+        public async Task<IActionResult> RegisterTeacher(RegisterUser registerUser)
         {
             if (registerUser == null)
             {
@@ -70,10 +70,33 @@ namespace StudentAccountManagment.Controllers
 
             try
             {
-                var token = await authService.Register(registerUser);
+                var token = await authService.RegisterTeacher(registerUser);
                 return Ok(token);
             }
             catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("RegisterStudent")]
+        public async Task<IActionResult> RegisterStudent(RegisterUser registerUser)
+        {
+            if (registerUser == null)
+            {
+                return BadRequest("user is null");
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(string.Join(",", ModelState));
+            }
+
+            try
+            {
+                var token = await authService.RegisterStudent(registerUser);
+                return Ok(token);
+            }
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }

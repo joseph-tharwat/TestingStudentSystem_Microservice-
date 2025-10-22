@@ -32,7 +32,7 @@ namespace StudentAccountManagment.ApplicationLayer
             {
                 throw new Exception("Invalid credentials");
             }
-            return jwtService.GenerateToken(user);
+            return await jwtService.GenerateToken(user);
         }
 
         public async Task LogOut()
@@ -41,7 +41,7 @@ namespace StudentAccountManagment.ApplicationLayer
             //need to put in blacklist 
         }
 
-        public async Task<string> Register(RegisterUser registerUser)
+        public async Task<string> RegisterTeacher(RegisterUser registerUser)
         {
             var existedUser = await userManager.FindByEmailAsync(registerUser.Email);
             if (existedUser != null)
@@ -61,8 +61,35 @@ namespace StudentAccountManagment.ApplicationLayer
                 throw new Exception(string.Join(",",result.Errors.Select(e=>e.Description)));
             }
 
-            //await signInManager.SignInAsync(user, false);
-            return jwtService.GenerateToken(user);
+            await userManager.AddToRoleAsync(user, "Teacher");
+
+            return await jwtService.GenerateToken(user);
         }
+
+        public async Task<string> RegisterStudent(RegisterUser registerUser)
+        {
+            var existedUser = await userManager.FindByEmailAsync(registerUser.Email);
+            if (existedUser != null)
+            {
+                throw new Exception("Email already existed.");
+            }
+
+            var user = new ApplicationUser()
+            {
+                UserName = registerUser.Name,
+                Email = registerUser.Email
+            };
+
+            var result = await userManager.CreateAsync(user, registerUser.Password);
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
+            }
+
+            await userManager.AddToRoleAsync(user, "Student");
+
+            return await jwtService.GenerateToken(user);
+        }
+
     }
 }

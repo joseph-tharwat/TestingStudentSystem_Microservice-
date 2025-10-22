@@ -22,6 +22,12 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddJwt();
+builder.Services.AddAuthorization(conf =>
+{ 
+    conf.AddPolicy("StudentPolicy", policy => policy.RequireRole(["Stuednt"]));
+    conf.AddPolicy("TeacherPolicy", policy => policy.RequireRole(["Teacher"]));
+});
+
 
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
@@ -29,7 +35,7 @@ builder.Services.AddReverseProxy()
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapSwaggerUI();
@@ -39,6 +45,8 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
     dbContext.Database.Migrate();
+
+    await RoleSeeding.SeedRoles(scope.ServiceProvider);
 }
 
 app.UseHttpsRedirection();
