@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using SharedLogger;
 using StudentAccountManagment.ApplicationLayer;
 using StudentAccountManagment.Infrastructure;
 using StudentAccountManagment.Infrastructure.Jwt;
@@ -11,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerUI();
+
+SerilogSeqConfiguration.SerilogSeqConfigur("Auth", builder.Configuration);
+builder.Host.UseSerilog();
 
 builder.Services.AddDbContext<AuthDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 
@@ -27,7 +32,6 @@ builder.Services.AddAuthorization(conf =>
     conf.AddPolicy("StudentPolicy", policy => policy.RequireRole(["Student"]));
     conf.AddPolicy("TeacherPolicy", policy => policy.RequireRole(["Teacher"]));
 });
-
 
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));

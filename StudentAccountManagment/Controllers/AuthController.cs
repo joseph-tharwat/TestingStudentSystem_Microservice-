@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using StudentAccountManagment.ApplicationLayer;
 using StudentAccountManagment.Shared;
 
@@ -82,6 +83,7 @@ namespace StudentAccountManagment.Controllers
         [HttpPost("RegisterStudent")]
         public async Task<IActionResult> RegisterStudent(RegisterUser registerUser)
         {
+            Log.Logger.Information("Student Registeration Endpoint");
             if (registerUser == null)
             {
                 return BadRequest("user is null");

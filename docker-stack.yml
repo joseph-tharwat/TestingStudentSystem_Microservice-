@@ -66,6 +66,17 @@ services:
     networks:
       - internal
 
+  #Logger    
+  seq:
+    image: datalust/seq
+    environment:
+        - ACCEPT_EULA=Y
+        - Seq__Url=http://+:5341
+    ports:
+        - "5341:5341"
+    networks:
+      - internal
+
 networks:
   internal:
     driver: overlay

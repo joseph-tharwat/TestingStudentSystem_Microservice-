@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using SharedLogger;
 using System.Reflection;
 using TestManagment.ApplicationLayer.GetQuestion;
 using TestManagment.Infrastructure;
@@ -18,6 +20,9 @@ builder.Services.AddControllers()
     }); 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+SerilogSeqConfiguration.SerilogSeqConfigur("TestManagment", builder.Configuration);
+builder.Host.UseSerilog();
 
 builder.Services.AddDbContext<TestDbContext>(ops=> ops.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 builder.Services.AddScoped<CreateTestService>();

@@ -2,6 +2,7 @@
 using GradingManagment.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace GradingManagment.Controllers
 {
@@ -19,6 +20,7 @@ namespace GradingManagment.Controllers
         [HttpPost("GradeQuestion")]
         public async Task<IActionResult> GradeQuestion(StudentAnswer studentAnswer)
         {
+            Log.Logger.Information("Grade Question Endpoint");
             if (studentAnswer == null)
             {
                 return BadRequest("Answer is null");

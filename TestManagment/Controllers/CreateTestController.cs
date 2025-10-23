@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using TestManagment.Domain.Entities;
 using TestManagment.Services.CreateTest;
 using TestManagment.Shared.Dtos;
@@ -43,6 +44,7 @@ namespace TestManagment.Controllers
         [HttpPost("CreateQuestion")]
         public async Task<IActionResult> CreateQuestion(QuestionDto question)
         {
+            Log.Logger.Information("Create Question Endpoint");
             if(question == null)
             {
                 return BadRequest("question must be not null");

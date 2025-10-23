@@ -2,6 +2,8 @@ using GradingManagment.ApplicationLayer;
 using GradingManagment.Infrastructure.Database;
 using GradingManagment.Infrastructure.RabbitMQ;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using SharedLogger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,9 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerUI();
+
+SerilogSeqConfiguration.SerilogSeqConfigur("Grading", builder.Configuration);
+builder.Host.UseSerilog();
 
 builder.Services.AddDbContext<GradingDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 builder.Services.Configure<RabbitMqSetings>(builder.Configuration.GetSection("RabbitMq"));
