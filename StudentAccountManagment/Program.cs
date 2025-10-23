@@ -24,7 +24,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddJwt();
 builder.Services.AddAuthorization(conf =>
 { 
-    conf.AddPolicy("StudentPolicy", policy => policy.RequireRole(["Stuednt"]));
+    conf.AddPolicy("StudentPolicy", policy => policy.RequireRole(["Student"]));
     conf.AddPolicy("TeacherPolicy", policy => policy.RequireRole(["Teacher"]));
 });
 

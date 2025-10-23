@@ -86,7 +86,7 @@ namespace StudentAccountManagment.ApplicationLayer
                 throw new Exception(string.Join(",", result.Errors.Select(e => e.Description)));
             }
 
-            await userManager.AddToRoleAsync(user, "Student");
+            await userManager.AddToRoleAsync(user, "Student"); 
 
             return await jwtService.GenerateToken(user);
         }
