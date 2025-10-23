@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SharedLogger\SharedLogger.csproj" />
+    <ProjectReference Include="..\SharedLogger\SharedLogger.csproj" />
   </ItemGroup>
 
 </Project>
