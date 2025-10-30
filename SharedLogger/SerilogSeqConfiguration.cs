@@ -12,6 +12,7 @@ namespace SharedLogger
                 .Enrich.WithProperty("Service", serviceName)
                 .Enrich.FromLogContext()
                 .WriteTo.Seq(seqUrl)
+                .WriteTo.Console()
                 .CreateLogger();
         }
     }
