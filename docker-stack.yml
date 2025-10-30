@@ -72,6 +72,7 @@ services:
     environment:
         - ACCEPT_EULA=Y
         - Seq__Url=http://+:5341
+        - SEQ_FIRSTRUN_ADMINPASSWORD=Abc_12345
     ports:
         - "5341:5341"
     networks:
