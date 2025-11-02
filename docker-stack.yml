@@ -5,6 +5,7 @@ services:
     environment:
       - ConnectionStrings__local=Server=db-exam;Database=TestingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5139 
+      - Seq__Url=http://seq:5341
     networks:
       - internal
 
@@ -14,6 +15,7 @@ services:
     environment:
       - ConnectionStrings__local=Server=db-grade;Database=GradingStudents;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5066
+      - Seq__Url=http://seq:5341
     networks:
       - internal
     deploy:
@@ -30,6 +32,7 @@ services:
       - ReverseProxy__Clusters__GradeStudentCluster__Destinations__GradeStudentService__Address=http://gradingmanagment:5066
       - ConnectionStrings__local=Server=db-exam;Database=AuthTestingSystem;User Id=sa;Password=Abc_12345;TrustServerCertificate=True;
       - ASPNETCORE_URLS=http://+:5169
+      - Seq__Url=http://seq:5341
     ports:
       - "5169:5169"
     networks:
@@ -38,7 +41,6 @@ services:
   #Database servers
   db-grade:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: db-grade
     environment:
        SA_PASSWORD: "Abc_12345"
        ACCEPT_EULA: "Y"
@@ -53,7 +55,6 @@ services:
     
   db-exam:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: db-exam
     environment:
       SA_PASSWORD: "Abc_12345"
       ACCEPT_EULA: "Y"
@@ -71,8 +72,8 @@ services:
     image: datalust/seq
     environment:
         - ACCEPT_EULA=Y
-        - Seq__Url=http://+:5341
         - SEQ_FIRSTRUN_ADMINPASSWORD=Abc_12345
+        - SEQ_STORAGE_MINIMUMFREESPACE=500000000
     ports:
         - "5341:5341"
     networks:
