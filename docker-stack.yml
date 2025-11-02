@@ -20,7 +20,7 @@ services:
       - internal
     deploy:
       replicas: 2
-   
+
   #Api Getway and Auth service
   studentaccountmanagment:
     image: josephtharwat/studentaccountmanagment
@@ -37,6 +37,7 @@ services:
       - "5169:5169"
     networks:
       - internal
+    
 
   #Database servers
   db-grade:
@@ -52,7 +53,9 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
-    
+    volumes:
+      - sql-grade:/var/opt/mssql
+
   db-exam:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
@@ -66,6 +69,8 @@ services:
       start_period: 20s
     networks:
       - internal
+    volumes:
+      - sql-exam:/var/opt/mssql
 
   #Logger    
   seq:
@@ -73,11 +78,18 @@ services:
     environment:
         - ACCEPT_EULA=Y
         - SEQ_FIRSTRUN_ADMINPASSWORD=Abc_12345
-        - SEQ_STORAGE_MINIMUMFREESPACE=500000000
     ports:
-        - "5341:5341"
+        #- "5341:5341"
+        - "5341:80" #for docker play environment
     networks:
       - internal
+    volumes:
+      - seq-logs:/data
+
+volumes:
+  seq-logs:
+  sql-grade:
+  sql-exam:
 
 networks:
   internal:
