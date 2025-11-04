@@ -2,6 +2,6 @@
 
 namespace TestManagment.Shared.Dtos
 {
-    public record NextQuestion(int QuestionIndex, string QuestionText, string Choise1, string Choise2, string Choise3);
+    public record NextQuestion(int QuestionIndex, int QuestionId, string QuestionText, string Choise1, string Choise2, string Choise3);
 
 }

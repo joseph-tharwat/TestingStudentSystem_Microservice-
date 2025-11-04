@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using TestManagment.Infrastructure;
@@ -9,10 +11,12 @@ namespace TestManagment.ApplicationLayer.GetQuestion
     public class GetQuestionService
     {
         private readonly TestDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public GetQuestionService(TestDbContext dbContext)
+        public GetQuestionService(TestDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public async Task<NextQuestion> GetNextQuestionAsync(StudentProgress studentProgress)
@@ -37,7 +41,7 @@ namespace TestManagment.ApplicationLayer.GetQuestion
 
             var NextQuestion = await dbContext.Questions
                 .Where(q=> q.Id == nextQuestionId)
-                .Select(q=>new NextQuestion(studentProgress.QuestionIndex, q.QuestionText.Text, q.Choise1.Choise, q.Choise2.Choise, q.Choise3.Choise))
+                .ProjectTo<NextQuestion>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
             if (NextQuestion == null)
@@ -45,6 +49,7 @@ namespace TestManagment.ApplicationLayer.GetQuestion
                 throw new Exception("The Question does not exist");
             }
 
+            NextQuestion = NextQuestion with { QuestionIndex = studentProgress.QuestionIndex };
             return NextQuestion;
 
         }
