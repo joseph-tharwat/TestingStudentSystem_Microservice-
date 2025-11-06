@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using TestManagment.ApplicationLayer.GetQuestion;
+using TestManagment.Domain.Entities;
+using TestManagment.PresentaionLayer;
 using TestManagment.Shared.Dtos;
 
 namespace TestManagment.Controllers
@@ -10,10 +13,12 @@ namespace TestManagment.Controllers
     public class GetQuestionController : ControllerBase
     {
         private readonly GetQuestionService getQuestionService;
+        private readonly IHubContext<TestObservationHub> testObservationHub;
 
-        public GetQuestionController(GetQuestionService getQuestionService)
+        public GetQuestionController(GetQuestionService getQuestionService, IHubContext<TestObservationHub> testObservationHub)
         {
             this.getQuestionService = getQuestionService;
+            this.testObservationHub = testObservationHub;
         }
 
         [HttpGet("GetNextQuestion")]
@@ -22,6 +27,7 @@ namespace TestManagment.Controllers
             try
             {
                 var nextQuestion = await getQuestionService.GetNextQuestionAsync(studentProgress);
+                await testObservationHub.Clients.Client(TestObservationHub.teacherConnectionId).SendAsync("StudentGotNextQuestion", Request.Headers["x-UserName"].ToString(), nextQuestion.QuestionIndex);
                 return Ok(nextQuestion);
             }
             catch (Exception ex)

@@ -5,6 +5,8 @@ using SharedLogger;
 using StudentAccountManagment.ApplicationLayer;
 using StudentAccountManagment.Infrastructure;
 using StudentAccountManagment.Infrastructure.Jwt;
+using System.Security.Claims;
+using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +36,22 @@ builder.Services.AddAuthorization(conf =>
 });
 
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .AddTransforms(context =>
+    {
+        if(context.Route.RouteId == "TestCreationGetRoute")
+        {
+            context.AddRequestTransform(async transformContext =>
+            {
+                var username = transformContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                //var role = transformContext.HttpContext.User.FindFirst(ClaimTypes.Role).Value;
+
+                transformContext.ProxyRequest.Headers.Add("x-UserName", username);
+                //transformContext.ProxyRequest.Headers.Add("x-Role", role);
+            });
+        }
+        
+    });
 
 var app = builder.Build();
 

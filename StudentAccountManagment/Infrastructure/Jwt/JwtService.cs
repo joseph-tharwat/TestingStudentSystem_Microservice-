@@ -22,7 +22,8 @@ namespace StudentAccountManagment.Infrastructure.Jwt
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Sid, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };
 

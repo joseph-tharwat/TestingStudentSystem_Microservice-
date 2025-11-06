@@ -6,6 +6,7 @@ using System.Reflection;
 using TestManagment.ApplicationLayer.GetQuestion;
 using TestManagment.Infrastructure;
 using TestManagment.Infrastructure.RabbitMQ;
+using TestManagment.PresentaionLayer;
 using TestManagment.Services.CreateTest;
 using TestManagment.Shared.Dtos;
 
@@ -32,6 +33,8 @@ builder.Services.AddAutoMapper(conf => { }, typeof(Program));
 builder.Services.AddMediatR(cnf=>cnf.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddScoped<GetQuestionService>();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddEndpointsApiExplorer();  
 builder.Services.AddSwaggerUI();
 
@@ -53,6 +56,8 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapHub<TestObservationHub>("/TestObservation");
 
 app.MapControllers();
 
