@@ -27,7 +27,7 @@ namespace TestManagment.Controllers
             try
             {
                 var nextQuestion = await getQuestionService.GetNextQuestionAsync(studentProgress);
-                await testObservationHub.Clients.Client(TestObservationHub.teacherConnectionId).SendAsync("StudentGotNextQuestion", Request.Headers["x-UserName"].ToString(), nextQuestion.QuestionIndex);
+                await testObservationHub.Clients.All.SendAsync("StudentGotNextQuestion", Request.Headers["x-UserName"].ToString(), studentProgress);
                 return Ok(nextQuestion);
             }
             catch (Exception ex)

@@ -33,24 +33,6 @@ namespace StudentAccountManagment.Infrastructure.Jwt
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key))
                 };
-
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context=>
-                    {
-                        var access_token = context.Request.Query["access_token"];
-                        if(context.HttpContext.Request.Path.StartsWithSegments("/TestObservation"))
-                        {
-                            var tokenHandeler = new JwtSecurityTokenHandler();
-                            var jwtToken = tokenHandeler.ReadJwtToken(access_token);
-                            var role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
-
-                            context.Request.Headers.Add("x-Role", role);
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-
             }
             );
             return services;

@@ -5,6 +5,7 @@ using SharedLogger;
 using StudentAccountManagment.ApplicationLayer;
 using StudentAccountManagment.Infrastructure;
 using StudentAccountManagment.Infrastructure.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Yarp.ReverseProxy.Transforms;
 
@@ -41,13 +42,28 @@ builder.Services.AddReverseProxy()
     {
         if(context.Route.RouteId == "TestCreationGetRoute")
         {
-            context.AddRequestTransform(async transformContext =>
+            context.AddRequestTransform(transformContext =>
             {
                 var username = transformContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                //var role = transformContext.HttpContext.User.FindFirst(ClaimTypes.Role).Value;
-
                 transformContext.ProxyRequest.Headers.Add("x-UserName", username);
-                //transformContext.ProxyRequest.Headers.Add("x-Role", role);
+                return ValueTask.CompletedTask;
+            });
+        }
+
+        if(context.Route.RouteId == "TestObservationRoute")
+        {
+            context.AddRequestTransform(transformContext => 
+            {
+                var access_token = transformContext.HttpContext.Request.Query["access_token"];
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(access_token);
+                var role = jwtToken.Claims.FirstOrDefault(c=> c.Type == ClaimTypes.Role).Value;
+                if(role != "Teacher")   //Block the request
+                {
+                    transformContext.HttpContext.Response.StatusCode = 401;
+                }
+                //else if role = Teacher => Pass the request
+                return ValueTask.CompletedTask;
             });
         }
         
