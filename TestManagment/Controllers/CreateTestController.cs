@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Threading.Tasks;
 using TestManagment.Domain.Entities;
 using TestManagment.Services.CreateTest;
 using TestManagment.Shared.Dtos;
@@ -39,6 +40,34 @@ namespace TestManagment.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("AddQuestionToTest")]
+        public async Task<IActionResult> AddQuestionToTest(ModifyTestRequest modifyTestRequest)
+        {
+            try
+            {
+                await CreateTestService.AddQuestionToTest(modifyTestRequest);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok("Question was added successfully");
+        }
+
+        [HttpPost("RemoveQuestionToTest")]
+        public async Task<IActionResult> RemoveQuestionToTest(ModifyTestRequest modifyTestRequest)
+        {
+            try
+            {
+                await CreateTestService.RemoveQuestionToTest(modifyTestRequest);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok("Question was removed successfully successfully");
         }
 
         [HttpPost("CreateQuestion")]

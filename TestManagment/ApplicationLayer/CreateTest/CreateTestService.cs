@@ -40,6 +40,48 @@ namespace TestManagment.Services.CreateTest
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task AddQuestionToTest(ModifyTestRequest modifyTestRequest)
+        {
+            if(modifyTestRequest.testId == 0)
+            {
+                throw new ArgumentException("Invalid test id");
+            }
+            if (modifyTestRequest.questionId == 0)
+            {
+                throw new ArgumentException("Invalid question id");
+            }
+
+            var test = await dbContext.Tests.Where(t => t.Id == modifyTestRequest.testId).Include(t=>t.TestQuestions).FirstOrDefaultAsync();
+            if(test == null)
+            {
+                throw new ArgumentException("This test is not created");
+            }
+
+            test.AddQuestion(modifyTestRequest.questionId);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task RemoveQuestionToTest(ModifyTestRequest modifyTestRequest)
+        {
+            if (modifyTestRequest.testId == 0)
+            {
+                throw new ArgumentException("Invalid test id");
+            }
+            if (modifyTestRequest.questionId == 0)
+            {
+                throw new ArgumentException("Invalid question id");
+            }
+
+            var test = await dbContext.Tests.Where(t => t.Id == modifyTestRequest.testId).Include(t => t.TestQuestions).FirstOrDefaultAsync();
+            if (test == null)
+            {
+                throw new ArgumentException("This test is not created");
+            }
+
+            test.RemoveQuestion(modifyTestRequest.questionId);
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task CreateQuestion(QuestionDto questionDto)
         {
             var question = mapper.Map<Question>(questionDto);
