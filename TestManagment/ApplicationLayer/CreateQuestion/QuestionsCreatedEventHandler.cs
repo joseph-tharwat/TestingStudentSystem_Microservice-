@@ -2,7 +2,7 @@
 using TestManagment.Domain.Events;
 using TestManagment.Infrastructure.RabbitMQ;
 
-namespace TestManagment.Services.CreateTest
+namespace TestManagment.ApplicationLayer.CreateQuestion
 {
     public class QuestionsCreatedEventHandler : INotificationHandler<ManyQuestionsCreatedEvent>
     {

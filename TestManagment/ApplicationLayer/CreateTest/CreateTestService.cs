@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TestManagment.Domain.Entities;
-using TestManagment.Domain.Events;
-using TestManagment.Infrastructure;
+using TestManagment.Infrastructure.DataBase;
 using TestManagment.Shared.Dtos;
 
 namespace TestManagment.Services.CreateTest
@@ -12,16 +10,14 @@ namespace TestManagment.Services.CreateTest
     {
         private TestDbContext dbContext { get; }
         private readonly IMapper mapper;
-        private readonly IMediator mediator;
 
-        public CreateTestService(TestDbContext _dbContext, IMapper _mapper, IMediator mediator)
+        public CreateTestService(TestDbContext _dbContext, IMapper _mapper)
         {
             dbContext = _dbContext;
             mapper = _mapper;
-            this.mediator = mediator;
         }
 
-        public async Task MakeTest(CreateTestDto createTestDto)
+        public async Task CreateTest(CreateTestDto createTestDto)
         {
             var validQuestionIds = await dbContext.Questions
                 .Where(q => createTestDto.questionsIds.Contains(q.Id))
@@ -81,29 +77,6 @@ namespace TestManagment.Services.CreateTest
             test.RemoveQuestion(modifyTestRequest.questionId);
             await dbContext.SaveChangesAsync();
         }
-
-        public async Task CreateQuestion(QuestionDto questionDto)
-        {
-            var question = mapper.Map<Question>(questionDto);
-            await dbContext.AddAsync(question);
-
-            var questionInfo = mapper.Map<QuestionCreatedInfo>(question);
-            await mediator.Publish(new OneQuestionCreatedEvent(questionInfo));
-            
-            await dbContext.SaveChangesAsync();
-        }
-
-        public async Task CreateQuestions(List<QuestionDto> questionDtos)
-        {
-            var questions = mapper.Map<List<Question>>(questionDtos);
-            await dbContext.AddRangeAsync(questions);
-
-            var questionsInfo = mapper.Map<List<QuestionCreatedInfo>>(questions);
-            await mediator.Publish(new ManyQuestionsCreatedEvent(questionsInfo));
-
-            await dbContext.SaveChangesAsync();
-        }
-
 
     }
 }

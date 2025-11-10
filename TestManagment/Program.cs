@@ -4,7 +4,7 @@ using Serilog;
 using SharedLogger;
 using System.Reflection;
 using TestManagment.ApplicationLayer.GetQuestion;
-using TestManagment.Infrastructure;
+using TestManagment.Infrastructure.DataBase;
 using TestManagment.Infrastructure.RabbitMQ;
 using TestManagment.PresentaionLayer;
 using TestManagment.Services.CreateTest;
@@ -26,6 +26,7 @@ SerilogSeqConfiguration.SerilogSeqConfigur("TestManagment", builder.Configuratio
 builder.Host.UseSerilog();
 
 builder.Services.AddDbContext<TestDbContext>(ops=> ops.UseSqlServer(builder.Configuration.GetConnectionString("local")));
+builder.Services.AddScoped<CreateQuestionService>();
 builder.Services.AddScoped<CreateTestService>();
 builder.Services.AddSingleton<RabbitMqService>();
 builder.Services.Configure<RabbitMqSetings>(builder.Configuration.GetSection("RabbitMq"));

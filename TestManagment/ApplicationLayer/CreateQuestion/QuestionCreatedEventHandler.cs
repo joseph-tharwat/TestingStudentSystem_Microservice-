@@ -3,7 +3,7 @@ using MediatR;
 using TestManagment.Domain.Events;
 using TestManagment.Infrastructure.RabbitMQ;
 
-namespace TestManagment.Services.CreateTest
+namespace TestManagment.ApplicationLayer.CreateQuestion
 {
     public class QuestionCreatedEventHandler : INotificationHandler<OneQuestionCreatedEvent>
     {

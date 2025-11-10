@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TestManagment.Infrastructure;
+using TestManagment.Infrastructure.DataBase;
 
 #nullable disable
 
 namespace TestManagment.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20250918072747_TablesWithRelationShips")]
-    partial class TablesWithRelationShips
+    [Migration("20250922114736_fixTablesName")]
+    partial class fixTablesName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,7 +58,7 @@ namespace TestManagment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Question");
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("TestManagment.Domain.Entities.Test", b =>
@@ -75,10 +75,10 @@ namespace TestManagment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Test");
+                    b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("TestManagment.Domain.Entities.TestsQuestions", b =>
+            modelBuilder.Entity("TestManagment.Domain.Entities.TestQuestion", b =>
                 {
                     b.Property<int>("TestId")
                         .HasColumnType("int");
@@ -106,7 +106,7 @@ namespace TestManagment.Migrations
                     b.ToTable("TestsScheduling");
                 });
 
-            modelBuilder.Entity("TestManagment.Domain.Entities.TestsQuestions", b =>
+            modelBuilder.Entity("TestManagment.Domain.Entities.TestQuestion", b =>
                 {
                     b.HasOne("TestManagment.Domain.Entities.Question", "question")
                         .WithMany("TestQuestions")

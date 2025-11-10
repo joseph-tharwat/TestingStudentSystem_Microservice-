@@ -2,7 +2,7 @@
 using TestManagment.Domain.Entities;
 using TestManagment.Domain.ValueObjects;
 
-namespace TestManagment.Infrastructure
+namespace TestManagment.Infrastructure.DataBase
 {
     public class TestDbContext: DbContext
     {

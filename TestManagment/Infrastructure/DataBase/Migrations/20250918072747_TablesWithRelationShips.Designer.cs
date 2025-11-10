@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TestManagment.Infrastructure;
+using TestManagment.Infrastructure.DataBase;
 
 #nullable disable
 
 namespace TestManagment.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    partial class TestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250918072747_TablesWithRelationShips")]
+    partial class TablesWithRelationShips
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,27 +42,23 @@ namespace TestManagment.Migrations
 
                     b.Property<string>("Choise1")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Choise1");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Choise2")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Choise2");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Choise3")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Choise3");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("QuestionText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("QuestionText");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("TestManagment.Domain.Entities.Test", b =>
@@ -70,19 +69,16 @@ namespace TestManagment.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Test");
                 });
 
-            modelBuilder.Entity("TestManagment.Domain.Entities.TestQuestion", b =>
+            modelBuilder.Entity("TestManagment.Domain.Entities.TestsQuestions", b =>
                 {
                     b.Property<int>("TestId")
                         .HasColumnType("int");
@@ -110,7 +106,7 @@ namespace TestManagment.Migrations
                     b.ToTable("TestsScheduling");
                 });
 
-            modelBuilder.Entity("TestManagment.Domain.Entities.TestQuestion", b =>
+            modelBuilder.Entity("TestManagment.Domain.Entities.TestsQuestions", b =>
                 {
                     b.HasOne("TestManagment.Domain.Entities.Question", "question")
                         .WithMany("TestQuestions")

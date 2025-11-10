@@ -19,8 +19,8 @@ namespace TestManagment.Controllers
             CreateTestService = createTestService;
         }
 
-        [HttpPost("MakeTest")]
-        public async Task<IActionResult> MakeTest(CreateTestDto createTestDto)
+        [HttpPost("CreateTest")]
+        public async Task<IActionResult> CreateTest(CreateTestDto createTestDto)
         {
             if (createTestDto == null)
             {
@@ -33,7 +33,7 @@ namespace TestManagment.Controllers
 
             try
             {
-                await CreateTestService.MakeTest(createTestDto);
+                await CreateTestService.CreateTest(createTestDto);
                 return Created();
             }
             catch (Exception ex)
@@ -69,58 +69,5 @@ namespace TestManagment.Controllers
             }
             return Ok("Question was removed successfully successfully");
         }
-
-        [HttpPost("CreateQuestion")]
-        public async Task<IActionResult> CreateQuestion(QuestionDto question)
-        {
-            Log.Logger.Information("Create Question Endpoint");
-            if(question == null)
-            {
-                return BadRequest("question must be not null");
-            }
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                await CreateTestService.CreateQuestion(question);
-                return Created();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            
-        }
-
-        [HttpPost("CreateQuestions")]
-        public async Task<IActionResult> CreateQuestions(List<QuestionDto>  questions)
-        {
-            if (questions == null)
-            {
-                return BadRequest("question must be not null");
-            }
-            if (questions.Count == 0)
-            {
-                return BadRequest("At least send one question.");
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                await CreateTestService.CreateQuestions(questions);
-                return Created();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            
-        }
-
     }
 }

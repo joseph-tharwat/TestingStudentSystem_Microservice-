@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using TestManagment.Infrastructure;
+using TestManagment.Infrastructure.DataBase;
 using TestManagment.Shared.Dtos;
 
 namespace TestManagment.ApplicationLayer.GetQuestion
