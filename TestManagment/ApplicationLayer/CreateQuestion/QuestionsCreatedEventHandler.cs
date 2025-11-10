@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TestManagment.ApplicationLayer.CreateQuestion.Interfaces;
 using TestManagment.Domain.Events;
 using TestManagment.Infrastructure.RabbitMQ;
 
@@ -6,17 +7,17 @@ namespace TestManagment.ApplicationLayer.CreateQuestion
 {
     public class QuestionsCreatedEventHandler : INotificationHandler<ManyQuestionsCreatedEvent>
     {
-        private readonly RabbitMqService rabbitMqService;
+        private readonly IEventPublisher eventPublisher;
 
-        public QuestionsCreatedEventHandler(RabbitMqService rabbitMqService)
+        public QuestionsCreatedEventHandler(IEventPublisher eventPublisher)
         {
-            this.rabbitMqService = rabbitMqService;
+            this.eventPublisher = eventPublisher;
         }
 
 
         public async Task Handle(ManyQuestionsCreatedEvent notification, CancellationToken cancellationToken)
         {
-            await rabbitMqService.PublishManyQuestionsCreatedAsync(notification);
+            await eventPublisher.PublishManyQuestionsCreatedAsync(notification);
         }
     }
 }

@@ -6,18 +6,17 @@ using Microsoft.AspNetCore.Connections;
 using TestManagment.Domain.Events;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using TestManagment.ApplicationLayer.CreateQuestion.Interfaces;
 
 namespace TestManagment.Infrastructure.RabbitMQ
 {
-    public class RabbitMqService:IDisposable
+    public class RabbitMqService: IEventPublisher, IDisposable 
     {
         private IConnection connection { get; set; }
-        private readonly IConfiguration Configuration;
         private readonly IOptions<RabbitMqSetings> config;
 
-        public RabbitMqService(IConfiguration configuration, IOptions<RabbitMqSetings> config) 
+        public RabbitMqService(IOptions<RabbitMqSetings> config) 
         {
-            Configuration = configuration;
             this.config = config;
 
             var factory = new ConnectionFactory() { Uri = new Uri(config.Value.Uri) };
