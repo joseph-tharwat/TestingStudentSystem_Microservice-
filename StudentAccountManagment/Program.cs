@@ -69,6 +69,18 @@ builder.Services.AddReverseProxy()
         
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true);
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -91,6 +103,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapReverseProxy();
+app.UseCors("AllowAll");
 
 app.MapControllers();
 
