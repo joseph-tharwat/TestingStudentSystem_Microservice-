@@ -15,6 +15,10 @@ The system is composed of the following services:
 - **RabbitMq** - used for communication between the test service and grade service.
 - **Serilog and seq** - used to log the messegeses and see it in UI.
 - **Yarp** - used as a ApiGetWay, it is installed in **StudentAccountManagement** service
+- **SignalR** Used so the teacher can observe the student answering the test in real time during the test.
+
+- **DDD** I tried to use Domain Driven Design to create Entities, Value Objects, events... 
+- **Archeticture** All services are implemented using Onion Archeticture [Domain Layer, Application Layer, Presentation Layer, Infrastracture Layer] 
 
 # How to run 
 You need to have docker only to run the project 
@@ -35,11 +39,11 @@ docker stack deploy -c docker-stack.yml system
 
 To make sure that the service is up and running:
 docker stack services system
-![alt text](image.png)
+![alt text](outputContainers.png)
 
 ### open the logs:
 You can open seq to see the logs on: localhost:5341/#
 
 ### Use the project: 
-you can test the project with the samples in the Simple Examples for testing Docker.txt file
+you can test the project with the samples in the "Simple Examples for testing Docker.txt" file
 

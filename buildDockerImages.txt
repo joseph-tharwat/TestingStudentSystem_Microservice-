@@ -1,13 +1,9 @@
-docker build -t josephtharwat/gradingmanagment        ./GradingManagment/
-docker build -t josephtharwat/studentaccountmanagment ./StudentAccountManagment/
-docker build -t josephtharwat/testmanagment           ./TestManagment/
-
-//new build commands after adding the logger (change the context)
+**********************Image build commands**********************
 docker build -f ./GradingManagment/Dockerfile  -t josephtharwat/gradingmanagment   ./
 docker build -f StudentAccountManagment/Dockerfile  -t josephtharwat/studentaccountmanagment ./
 docker build -f ./TestManagment/Dockerfile -t josephtharwat/testmanagment  .
 
-
+**********************Image push commands**********************
 docker push josephtharwat/gradingmanagment
 docker push josephtharwat/studentaccountmanagment
 docker push josephtharwat/testmanagment
