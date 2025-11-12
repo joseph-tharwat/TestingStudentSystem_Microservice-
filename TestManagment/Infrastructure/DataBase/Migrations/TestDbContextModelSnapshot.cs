@@ -31,7 +31,7 @@ namespace TestManagment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("Answer")
                         .IsRequired()
@@ -59,7 +59,7 @@ namespace TestManagment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("TestManagment.Domain.Entities.Test", b =>
@@ -68,7 +68,7 @@ namespace TestManagment.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
@@ -79,7 +79,7 @@ namespace TestManagment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Tests", (string)null);
                 });
 
             modelBuilder.Entity("TestManagment.Domain.Entities.TestQuestion", b =>
@@ -94,7 +94,7 @@ namespace TestManagment.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("TestsQuestions");
+                    b.ToTable("TestsQuestions", (string)null);
                 });
 
             modelBuilder.Entity("TestManagment.Domain.Entities.TestsScheduling", b =>
@@ -107,7 +107,7 @@ namespace TestManagment.Migrations
 
                     b.HasKey("TestId", "DateTime");
 
-                    b.ToTable("TestsScheduling");
+                    b.ToTable("TestsScheduling", (string)null);
                 });
 
             modelBuilder.Entity("TestManagment.Domain.Entities.TestQuestion", b =>

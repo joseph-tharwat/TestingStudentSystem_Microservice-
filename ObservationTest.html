@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignalR Student Question Listener</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 400px;
+            height: 250px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Student Question Updates</h2>
+<div id="messages"></div>
+
+<script>
+    // Change this to your hub URL
+     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0MiIsInNpZCI6ImJiYzZlZTkzLTEyMTUtNDQ2OS05NmMwLTBjOWVlMGMwN2NmNiIsImVtYWlsIjoidDJAdC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJUZWFjaGVyIiwiZXhwIjoxNzYyNzk5NDkxLCJpc3MiOiJBdXRoU2VydmljZSIsImF1ZCI6Ik90aGVyU2VydmljZXMifQ.NQHKwkJdlVpO2iBpqP9o8ttXv5zwfc2aaOy7CmQbmQY";
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5169/TestObservation?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0MiIsInNpZCI6ImJiYzZlZTkzLTEyMTUtNDQ2OS05NmMwLTBjOWVlMGMwN2NmNiIsImVtYWlsIjoidDJAdC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJUZWFjaGVyIiwiZXhwIjoxNzYyNzk5NDkxLCJpc3MiOiJBdXRoU2VydmljZSIsImF1ZCI6Ik90aGVyU2VydmljZXMifQ.NQHKwkJdlVpO2iBpqP9o8ttXv5zwfc2aaOy7CmQbmQY")
+        .build();
+
+    // When server calls StudentGotNextQuestion
+    connection.on("StudentGotNextQuestion", function (studentName, studentProgress) {
+        const msgDiv = document.getElementById("messages");
+        const newMsg = document.createElement("div");
+        newMsg.textContent = "Student: " + studentName + ", Test No: " + studentProgress.testId + "Question No: " + studentProgress.questionIndex
+        msgDiv.appendChild(newMsg);
+        msgDiv.scrollTop = msgDiv.scrollHeight; // auto-scroll to bottom
+    });
+
+    // Start the connection
+    connection.start()
+        .then(() => console.log("Connected to SignalR hub"))
+        .catch(err => console.error("Connection failed:", err));
+</script>
+
+</body>
+</html>

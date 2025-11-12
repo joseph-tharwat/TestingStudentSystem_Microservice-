@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestManagment.Domain.Entities;
-using TestManagment.Domain.ValueObjects;
+using TestManagment.Domain.ValueObjects.Question;
+using TestManagment.Domain.ValueObjects.Test;
 
 namespace TestManagment.Infrastructure.DataBase
 {
@@ -24,26 +25,43 @@ namespace TestManagment.Infrastructure.DataBase
 
             modelBuilder.Entity<Question>()
                 .Property(q => q.QuestionText)
-                .HasConversion(v => v.Text, v => new QuestionTxt(v))
+                .HasConversion(v => v.Value, v => new QuestionTxt(v))
                 .HasColumnName("QuestionText");
 
             modelBuilder.Entity<Question>()
                 .Property(q => q.Choise1)
-                .HasConversion(v => v.Choise, v => new QuestionChoise(v))
+                .HasConversion(ch => ch.Value, v => new QuestionChoise(v))
                 .HasColumnName("Choise1");
 
             modelBuilder.Entity<Question>()
                 .Property(q => q.Choise2)
-                .HasConversion(v => v.Choise, v => new QuestionChoise(v))
+                .HasConversion(ch => ch.Value, v => new QuestionChoise(v))
                 .HasColumnName("Choise2");
 
             modelBuilder.Entity<Question>()
                 .Property(q => q.Choise3)
-                .HasConversion(v => v.Choise, v => new QuestionChoise(v))
+                .HasConversion(ch => ch.Value, v => new QuestionChoise(v))
                 .HasColumnName("Choise3");
+
+            modelBuilder.Entity<Question>()
+                .Property(q => q.Answer)
+                .HasConversion(ans => ans.Value, v => new QuestionAnswer(v))
+                .HasColumnName("Answer");
+                
 
             modelBuilder.Entity<Test>()
                 .HasKey(t => t.Id);
+
+            modelBuilder.Entity<Test>()
+                .Property(t => t.Title)
+                .HasConversion(title => title.Value, v => new TestTitle(v))
+                .HasColumnName("Title");
+
+            modelBuilder.Entity<Test>()
+                .Property(t => t.PublicationStatus)
+                .HasConversion(status => status.IsPublished, isPublished => new TestPublicationStatus(isPublished))
+                .HasColumnName("IsPublished");
+
 
             modelBuilder.Entity<TestsScheduling>()
                 .HasKey(t => new {t.TestId, t.DateTime});

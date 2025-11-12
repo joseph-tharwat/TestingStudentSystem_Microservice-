@@ -1,18 +1,24 @@
 ﻿using System.Collections.ObjectModel;
+using TestManagment.Domain.ValueObjects.Test;
 
 namespace TestManagment.Domain.Entities
 {
     public class Test
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public bool IsPublished { get; set; }
+        public int Id { get; private set; }
+        public TestTitle Title { get; set; }
+        public TestPublicationStatus PublicationStatus { get; private set; }
         public ICollection<TestQuestion> TestQuestions { get; set; }  
         public Collection<TestsScheduling> Schedulings { get; set; }
 
+        public Test()
+        {
+            PublicationStatus = new TestPublicationStatus();
+        }
+
         public void AddQuestion(int questionId)
         {
-            if(IsPublished)
+            if(PublicationStatus)
             {
                 throw new InvalidOperationException("The test has been published, You can not add any questions now.");
             }
@@ -26,7 +32,7 @@ namespace TestManagment.Domain.Entities
 
         public void RemoveQuestion(int questionId)
         {
-            if (IsPublished)
+            if (PublicationStatus)
             {
                 throw new InvalidOperationException("The test has been published, You can not remove any questions now.");
             }
@@ -39,6 +45,23 @@ namespace TestManagment.Domain.Entities
             TestQuestions.Remove(testQuestion);
         }
 
-        
+        public void Publish()
+        {
+            if (PublicationStatus)
+            {
+                throw new InvalidOperationException("This test has been published before");
+            }
+            PublicationStatus = PublicationStatus.Publish();
+        }
+
+        public void UnPublish()
+        {
+            if (!PublicationStatus)
+            {
+                throw new InvalidOperationException("This test has not published before");
+            }
+            PublicationStatus.unPublish();
+        }
+
     }
 }
