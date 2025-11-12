@@ -39,7 +39,7 @@ docker stack deploy -c docker-stack.yml system
 
 To make sure that the service is up and running:
 docker stack services system
-![alt text](outputContainers.png)
+![alt text](Images/outputContainers.png)
 
 ### open the logs:
 You can open seq to see the logs on: localhost:5341/#
